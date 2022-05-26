@@ -7,9 +7,16 @@ Project description
 DEADLINE: Jun 6, 2022
 <br />
  Introduction
+ <br />
 In this project you will implement data replication of transactions on top of PostgreSQL. Data is replicated to 3 copies/servers. Each of the nodes will be running a PostgreSQL server along with an agent. You can mimic a replicated system by creating multiple PostgreSQL servers (with different data directory) and agent instances on your machine.
+<br />
+
 Let us consider an example to illustrate how transactions will run. The replication system has a leader (one of the three copies) and followers (the other two copies). A client makes a connection to the leader to send transactions. The client processes transactions in an optimistic concurrency control way. It sends read operations to the leader and buffers write operations. Once the transaction completes processing, then the client sends a COMMIT request that includes both the read and write sets.
+
+<br />
 The leader receives two types of requests from clients. A READ request is processed by returning the most recently committed value of the requested data object. A COMMIT request is processed by check whether the transaction can commit or not. If the transaction cannot commit, then an ABORT message is sent back to the client and the transaction is discarded. Otherwise, the transaction COMMITs by applying its writes to the database, responding to the client with a COMMIT decision, and appending the transaction’s write-set to the “Replication Log”.
+
+<br />
 After a transaction commits, the leader sends the corresponding entry in the Replication Log to the followers so that they can append the entry to their logs as well (the entry should be at the same log position in all nodes) and apply the write-sets to their databases.
 
 
