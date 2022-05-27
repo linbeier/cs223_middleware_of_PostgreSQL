@@ -47,9 +47,9 @@ public class Connector {
         this.port = getString("port");
         this.username = getString("username");
         this.password = getString("password");
-        jdbcDriver = "com.mysql.jdbc.Driver";
+        jdbcDriver = "com.postgresql.jdbc.Driver";
         //数据库连接的url，设置了编码为UTF-8
-        connStr = "jdbc:mysql://"+host+":"+port+"/"+database+"?useUnicode=true&characterEncoding=UTF-8";
+        connStr = "jdbc:postgresql://"+host+":"+port+"/"+database+"?useUnicode=true&characterEncoding=UTF-8";
     }
 
     /**
