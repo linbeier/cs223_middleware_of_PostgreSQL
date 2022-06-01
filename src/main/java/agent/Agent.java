@@ -24,25 +24,10 @@ public class Agent {
         for (; ; ) {
             Socket sock = ss.accept();
             System.out.println("connected from " + sock.getRemoteSocketAddress());
-            FutureTask<String> future = new FutureTask<String>(new Handler(sock));
-            this.futureTaskQ.add(future);
-            Thread t = new Thread(future);
+            Thread t = new Handler(sock);
             t.start();
         }
 
     }
 
-    //todo: futureTaskQ has all connections from clients, result can be fetched from futureTask.get(). however, maybe directly process in handler class better;
-
-    public ArrayList<ImmutablePair<String, String>> getOperations() {
-        String[] opList = this.operations.split(";");
-        ArrayList<ImmutablePair<String, String>> arr = new ArrayList<ImmutablePair<String, String>>();
-        for (String op : opList) {
-            String first = op.split("=")[0];
-            String second  = op.split("=")[1];
-            ImmutablePair<String, String> pair = new ImmutablePair<String, String>(first, second);
-            arr.add(pair);
-        }
-        return arr;
-    }
 }
