@@ -82,6 +82,7 @@ class Handler extends Thread {
                 params.add(op.second.get(0));
             }
         }
+        sql_query.append("END\n");
 
         Object[] params_obj = params.toArray();
         ResultSet rs = null;
