@@ -1,6 +1,7 @@
+package agent;
+
 import java.io.IOException;
 import java.sql.* ;  // for standard JDBC programs
-import java.math.* ; // for BigDecimal and BigInteger support
 import java.util.PropertyResourceBundle;
 
 /**
