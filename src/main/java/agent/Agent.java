@@ -1,7 +1,5 @@
 package agent;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,13 +10,12 @@ import java.util.concurrent.FutureTask;
 
 public class Agent {
     private String operations;
-    ArrayBlockingQueue<FutureTask<String>> futureTaskQ;
 
     public Agent() {
-        this.futureTaskQ = new ArrayBlockingQueue<FutureTask<String>>(100);
+
     }
 
-    public void Listen_handle() throws IOException {
+    public void Listen_handle(int port_num) throws IOException {
         ServerSocket ss = new ServerSocket(6666); // 监听指定端口
         System.out.println("server is running...");
         for (; ; ) {
