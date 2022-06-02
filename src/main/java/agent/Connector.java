@@ -1,7 +1,9 @@
 package agent;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.* ;  // for standard JDBC programs
+import java.util.Objects;
 import java.util.PropertyResourceBundle;
 
 /**
@@ -42,13 +44,19 @@ public class Connector {
      * @throws IOException
      */
     public Connector() throws IOException {
-        bundle = new PropertyResourceBundle(Connector.class.getResourceAsStream("config.properties"));
-        this.host = getString("host");
-        this.database = getString("database");
-        this.port = getString("port");
-        this.username = getString("username");
-        this.password = getString("password");
-        jdbcDriver = "com.postgresql.jdbc.Driver";
+//        InputStream stream = Connector.class.getResourceAsStream("agent/config.properties");
+//        bundle = new PropertyResourceBundle(stream);
+//        this.host = getString("host");
+//        this.database = getString("database");
+//        this.port = getString("port");
+//        this.username = getString("username");
+//        this.password = getString("password");
+        this.host = "localhost";
+        this.database = "replicate_db";
+        this.port = "5432";
+        this.username = "postgres";
+        this.password = "123";
+        jdbcDriver = "org.postgresql.Driver";
         //数据库连接的url，设置了编码为UTF-8
         connStr = "jdbc:postgresql://"+host+":"+port+"/"+database+"?useUnicode=true&characterEncoding=UTF-8";
     }
@@ -95,7 +103,7 @@ public class Connector {
      */
     public void connectDB() throws SQLException{
         conn = DriverManager.getConnection(connStr,username,password);
-        conn.setAutoCommit(false);// 设置自动提交为false
+        conn.setAutoCommit(true);// 设置自动提交为false
     }
     /**
      * 关闭数据库，释放内存
