@@ -1,7 +1,6 @@
 package agent;
 
-import client.TransactionGenerator;
-import converter.TransactionConverter;
+import manager.TransactionConverter;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 class Handler extends Thread {
     Socket sock;

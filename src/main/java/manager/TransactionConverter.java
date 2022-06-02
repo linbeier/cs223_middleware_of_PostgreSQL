@@ -1,4 +1,4 @@
-package converter;//import java.sql.Types;
+package manager;//import java.sql.Types;
 
 import java.util.Scanner;
 
