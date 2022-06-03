@@ -1,6 +1,8 @@
 package agent;
 
+import manager.Transaction;
 import manager.TransactionConverter;
+import manager.TransactionManager;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,13 +21,6 @@ class Handler extends Thread {
     public Handler(Socket sock) {
         this.sock = sock;
         this.ReadSQL = "select object_name, object_value from table_test where object_name = ?;\n";
-//        this.WriteSQL = "If exists (select 1 from table_test where object_name = ?)\n" +
-//                "Update table_test\n" +
-//                "Set ?\n" +
-//                "Where object_name = ?;\n" +
-//                "Else\n" +
-//                "Insert into table_test\n" +
-//                "values (?, ?)\n";
         this.WriteSQL = "update table_test set object_value = ? where object_name = ?;\n";
     }
 
@@ -59,25 +54,27 @@ class Handler extends Thread {
                 if(s.equals("end")){
                     break;
                 }
+
                 ArrayList<TransactionConverter.Pair<String,ArrayList<String>>> arr = new ArrayList<>();
 
                 arr = TransactionConverter.splitInput(s);
+                Transaction arr_transaction = TransactionManager.getInstance().addTransaction(arr);
                 s = connect_sql(arr, manager);
-                boolean b = validate();
+                boolean b = validate(arr_transaction);
                 if(b){
                     manager.commitChange();
                 }else{
                     manager.rollBack();
                 }
-                //todo: process with db, and write back to client
+
                 writer.write("ok: " + s + "\n");
                 writer.flush();
             }
         return "ok";
     }
 
-    private boolean validate(){
-        return false;
+    private boolean validate(Transaction t){
+        return Validator.validatePhase(t);
     }
 
     private String connect_sql(ArrayList<TransactionConverter.Pair<String,ArrayList<String>>> arr, Connector manager) throws IOException, ClassNotFoundException, SQLException {

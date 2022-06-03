@@ -37,9 +37,10 @@ public class TransactionManager {
         return validatedTransaction;
     }
 
-    public synchronized void addTransaction(ArrayList<Pair<String,ArrayList<String>>> operationList) {
+    public synchronized Transaction addTransaction(ArrayList<Pair<String,ArrayList<String>>> operationList) {
         Transaction transaction = new Transaction(operationList, ++curTransactionNum);
         curTransaction.put(curTransactionNum, transaction);
+        return  transaction;
     }
 
     public synchronized void setValidatedTransaction(Transaction transaction) {

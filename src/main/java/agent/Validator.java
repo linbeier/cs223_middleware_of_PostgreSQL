@@ -14,7 +14,7 @@ public class Validator {
         return readSet;
     }
 
-    public boolean validatePhase(Transaction transaction) {
+    public static boolean validatePhase(Transaction transaction) {
         boolean isValid = false;
         Set<String> writeSet = transaction.getWriteSet();
         Set<String> readSet = transaction.getReadSet();
@@ -31,7 +31,7 @@ public class Validator {
         return isValid;
     }
 
-    public boolean setIsDisjoint(Set<String> setA, Set<String> setB) {
+    public static boolean setIsDisjoint(Set<String> setA, Set<String> setB) {
         for (String operationObj : setA) {
             if (setB.contains(operationObj)) {
                 return false;
@@ -40,10 +40,10 @@ public class Validator {
         return true;
     }
 
-    public void OCC(Transaction transaction) {
-        Set<String> _set = readPhase(transaction);
-        boolean isValid = validatePhase(transaction);
-
-    }
+//    public void OCC(Transaction transaction) {
+//        Set<String> _set = readPhase(transaction);
+//        boolean isValid = validatePhase(transaction);
+//
+//    }
 }
 
