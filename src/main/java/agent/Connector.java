@@ -103,7 +103,7 @@ public class Connector {
      */
     public void connectDB() throws SQLException{
         conn = DriverManager.getConnection(connStr,username,password);
-        conn.setAutoCommit(true);// 设置自动提交为false
+        conn.setAutoCommit(false);// 设置自动提交为false
     }
     /**
      * 关闭数据库，释放内存
@@ -177,7 +177,6 @@ public class Connector {
         boolean result = false;
         manager.setPrepareStatementParams(sql, params); // 填充参数
         pstm.executeUpdate(); // 执行更新
-        manager.commitChange();
         result = true;
         return result;
     }
@@ -186,8 +185,12 @@ public class Connector {
      * 提交信息到数据库
      * @throws SQLException
      */
-    private void commitChange() throws SQLException
+    public void commitChange() throws SQLException
     {
         conn.commit();
+    }
+
+    public void rollBack() throws SQLException {
+        conn.rollback();
     }
 }
