@@ -1,7 +1,6 @@
 package agent;
 
-import client.TransactionGenerator;
-import converter.TransactionConverter;
+import manager.TransactionConverter;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,14 +8,13 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicInteger;
+
 
 class Handler extends Thread {
     Socket sock;
     private String ReadSQL;
     private String WriteSQL;
-    private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
+
 
     public Handler(Socket sock) {
         this.sock = sock;
@@ -62,7 +60,7 @@ class Handler extends Thread {
                     break;
                 }
                 ArrayList<TransactionConverter.Pair<String,ArrayList<String>>> arr = new ArrayList<>();
-                int transaction_id = ID_GENERATOR.incrementAndGet();
+
                 arr = TransactionConverter.splitInput(s);
                 s = connect_sql(arr, manager);
                 boolean b = validate();
