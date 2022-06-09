@@ -1,36 +1,22 @@
 # cs223_middleware_of_PostgreSQL
 
-
-Project description
-
-
-DEADLINE: Jun 6, 2022
-<br />
- Introduction
- <br />
-In this project you will implement data replication of transactions on top of PostgreSQL. Data is replicated to 3 copies/servers. Each of the nodes will be running a PostgreSQL server along with an agent. You can mimic a replicated system by creating multiple PostgreSQL servers (with different data directory) and agent instances on your machine.
-<br />
-
-Let us consider an example to illustrate how transactions will run. The replication system has a leader (one of the three copies) and followers (the other two copies). A client makes a connection to the leader to send transactions. The client processes transactions in an optimistic concurrency control way. It sends read operations to the leader and buffers write operations. Once the transaction completes processing, then the client sends a COMMIT request that includes both the read and write sets.
-
-<br />
-The leader receives two types of requests from clients. A READ request is processed by returning the most recently committed value of the requested data object. A COMMIT request is processed by check whether the transaction can commit or not. If the transaction cannot commit, then an ABORT message is sent back to the client and the transaction is discarded. Otherwise, the transaction COMMITs by applying its writes to the database, responding to the client with a COMMIT decision, and appending the transaction’s write-set to the “Replication Log”.
-
-<br />
-After a transaction commits, the leader sends the corresponding entry in the Replication Log to the followers so that they can append the entry to their logs as well (the entry should be at the same log position in all nodes) and apply the write-sets to their databases.
-
-
-
-In addition to the basic design above, extend the prototype with two features (1) read-only transactions, and (2) leader replacement.
-(1) Read-Only Transactions
-Extend the agent at nodes to enable performing a read-only transaction at any node (including a secondary node) while maintaining conflict serializability.
-- Describe the algorithm to process read-only transactions.
-- Prove that conflict serializability is maintained.
-(2) Leader replacement
-Extend the agents to be able to tolerate the case of a leader failure. If a leader node fails, then you should be able to replace the leader with a new node. This includes making the new node recover the state by asking the other nodes for information about transactions and the Replication Log.
-Important Notes:
-● The leader in your case is fixed to be the node which submits the inserts to other nodes.
-● You do not need to change any of the PostgreSQL’s code and the protocol implementation should be done as a layer running on top of the PostgreSQL servers.
-● In order to test failure scenarios, you only need to mark a node agent as failed. I.e. it stops sending and receiving messages.
-Deliverables
-Submit on canvas, a zipped file containing code, report and README file with the steps to compile and run your code. README should clearly mention if any third party software that is required to be installed. The report should be of 2-3 pages and should mention the design of your code and answers the questions in this document.
+This project aims to schedule transactions outside database, using optimistic concurrency control.  
+### Basic installation:  
+Java 18, Spring Framework, PostgreSQL Database, JDBC for PostgreSQL, log4j  
+### Database configuration:  
+create 3 different database servers, named "replicate_db", "replicate_db2", "replicate_db3". Corresponding server port is 
+5432, 5433, 5434. For each database server, create a table named "table_test"  
+### Client 
+Compile program with
+```javac Application.java```   
+And start client from Application with parameter " client Agent1 " to start client connecting to Agent1(default leader).  
+### Agent
+Start Agent from Application with parameter " agent Agent1" to start agent1. Here we have set configurations for each agent, 
+for example, Agent1 has port 6666 to communicate with client and listen to database at port 5432
+### Send a Transaction
+To send a transaction, in the terminal that runs client, after seen ">>>", then write your transaction.  
+Your transaction should be like: "R=X;W=X,4;R=Y;R=X", in which "R" represent read operation and followed "=" to split operation and object.
+So in "R=X;", we request a read operation on object X. Character ";" means the end of operation.  
+After you finish your transaction, enter return key to add a "\n" at the end. Our program will separate transactions with "\n"
+### Crash an agent
+To crash an agent, simply ctrl-c the terminal that runs agent1.
