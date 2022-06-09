@@ -17,7 +17,8 @@ for example, Agent1 has port 6666 to communicate with client and listen to datab
 To send a transaction, in the terminal that runs client, after seen ">>>", then write your transaction.  
 Your transaction should be like: "R=X;W=X,4;R=Y;R=X", in which "R" represent read operation and followed "=" to split operation and object.
 So in "R=X;", we request a read operation on object X. Character ";" means the end of operation.  
-After you finish your transaction, enter return key to add a "\n" at the end. Our program will separate transactions with "\n"
+After you finish your transaction, enter return key to add a "\n" at the end. Our program will separate transactions with "\n"   
+
 ![Image text](https://github.com/linbeier/cs223_middleware_of_PostgreSQL/blob/master/Transaction_example.png)
 ### Crash an agent
 To crash an agent, simply ctrl-c the terminal that runs agent1.
