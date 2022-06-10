@@ -1,8 +1,11 @@
 package agent;
 
+import manager.Logger;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +45,49 @@ public class Agent {
             Thread t = new Handler(sock);
             t.start();
         }
-
     }
 
+    public void sendLogEntry(ArrayList<Logger.LogEntry> logEntries, int port) {
+        ObjectInputStream is = null;
+        ObjectOutputStream os = null;
+        Socket socket = null;
+        for (int i = 0; i < logEntries.size(); i++) {
+            try {
+                socket = new Socket("localhost", 10000);
+                os = new ObjectOutputStream(socket.getOutputStream());
+                Logger.LogEntry logEntry = logEntries.get(i);
+                os.writeObject(logEntry);
+                os.flush();
+
+                is = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+                Object obj = is.readObject();
+                if (obj != null) {
+                    logEntry = (Logger.LogEntry) obj;
+                    System.out.println("get log entry id: " + logEntry.getTransactionId() +
+                            "/ Type: " + logEntry.getLogType());
+                }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    is.close();
+                } catch (Exception ex) {
+                }
+                try {
+                    os.close();
+                } catch (Exception ex) {
+                }
+                try {
+                    socket.close();
+                } catch (Exception ex) { }
+            }
+        }
+    }
+
+
+    
 }

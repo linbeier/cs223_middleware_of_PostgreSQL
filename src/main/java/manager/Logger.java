@@ -13,14 +13,27 @@ public class Logger {
         public String object = null;
         public String newValue = null;
 
-        public LogEntry() {
-        }
+        public LogType getLogType() { return logType; }
+
+        public Integer getTransactionId() { return transactionId; }
+
+        public String getObject() { return object; }
+
+        public String getNewValue() { return newValue; }
+
+        public LogEntry() {}
 
         public LogEntry(LogType logType, Integer transactionId, String object, String newValue) {
             this.logType = logType;
             this.transactionId = transactionId;
             this.object = object;
             this.newValue = newValue;
+        }
+
+        @Override
+        public String toString() {
+            return "LogEntry [logType=" + logType + ", transactionId=" + transactionId +
+                    ", object=" + object+ ", newValue=" + newValue + "]";
         }
     }
 
@@ -31,6 +44,8 @@ public class Logger {
     public synchronized ArrayList<LogEntry> getLogList() {
         return logList;
     }
+
+    public int getLogLen() { return logLen; }
 
     public synchronized void addWriteLogEntry(ArrayList<String> operation, Integer transactionId) {
         LogEntry logEntry = new LogEntry(LogType.WRITE, transactionId, operation.get(0), operation.get(1));
