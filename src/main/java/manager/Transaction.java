@@ -42,6 +42,17 @@ public class Transaction {
         return transactionId;
     }
 
+    public ArrayList<ArrayList<String>> getOperationList(String type) {
+        ArrayList<ArrayList<String>> returnList = new ArrayList<>();
+        for (Pair<String,ArrayList<String>> operation : operationList) {
+            String operationType = operation.first;
+            if (operationType.equals(type)) {
+                returnList.add(operation.second);
+            }
+        }
+        return returnList;
+    }
+
     private void UpdateOperationSet(String type, Set<String> set) {
         for (Pair<String,ArrayList<String>> operation : operationList) {
             String operationType = operation.first; // Get the operation type (R/W)
